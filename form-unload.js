@@ -36,7 +36,9 @@ var FormUnload = function( form, options ) {
 	});
 	$(window).bind('beforeunload', function() {
 		var changed = self.$inputs.is(function() {
-				return $(this).data('formUnloadValue') != $(this).val();
+				if( $(this).data('formUnloadValue') != $(this).val() ) {
+					return true
+				}
 			});
 		if( changed > 0 ) {
 			return self.options.message;
