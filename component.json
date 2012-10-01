@@ -1,0 +1,8 @@
+{
+  "name": "form-unload.js",
+  "version": "0.0.1",
+  "main": "./form-unload.js",
+  "dependencies": {
+    "jquery": "~1.7.2"
+  }
+}
