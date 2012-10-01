@@ -4,6 +4,8 @@ $.formUnload = {
 	defaults: {
 		inputsSelector: 'input, textarea, select',
 		message: 'Your changes may be lost if you continue. Are you sure you wish to leave this page?',
+		// a selector of inputs to be excluded from the unload checks.
+		exclude: null
 	}
 };
 
@@ -29,6 +31,9 @@ var FormUnload = function( form, options ) {
 	this.$inputs = this.$form.find(this.options.inputsSelector);
 	this.stored();
 	var self = this;
+	this.$form.bind('submit', function() {
+		self.stored();
+	});
 	$(window).bind('beforeunload', function() {
 		var changed = self.$inputs.is(function() {
 				return $(this).data('formUnloadValue') != $(this).val();
@@ -45,18 +50,13 @@ FormUnload.prototype = {
 	storeValue: function() {
 		$(this).data('formUnloadValue', $(this).val());
 	},
-	addInputs: function( $inputs ) {
-		console.log($inputs)
-		var self = this;
-		var add = function() {
-			self.storeValue.call(this);
-			if( !self.$inputs.has(this).length ) {
-				console.log(this);
-				self.$inputs = self.$inputs.add(this);
-			}
+	addInputs: function( $els ) {
+		var inputs = $els.find(this.options.inputsSelector)
+		if( !inputs.length ) {
+			inputs = $els.filter(this.options.inputsSelector)
 		}
-		$inputs.filter(this.options.inputsSelector).each(add)
-		$inputs.find(this.options.inputsSelector).each(add)
+		inputs.each(this.storeValue)
+		this.$inputs = this.$inputs.add(inputs)
 	}
 };
 
