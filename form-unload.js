@@ -57,6 +57,8 @@ FormUnload.prototype = {
 		if( !inputs.length ) {
 			inputs = $els.filter(this.options.inputsSelector)
 		}
+		if( this.options.exclude )
+			inputs = inputs.filter(this.options.exclude)
 		inputs.each(this.storeValue)
 		this.$inputs = this.$inputs.add(inputs)
 	}
