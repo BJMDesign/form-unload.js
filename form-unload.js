@@ -31,7 +31,7 @@ var FormUnload = function( form, options ) {
 	this.$inputs = $([])
 	this._addInputs(this.$form.find(this.options.inputsSelector))
 	this.stored()
-	self = this
+	var self = this
 	this.$form.bind('submit', function() {
 		self.stored()
 	})
@@ -63,6 +63,6 @@ FormUnload.prototype = {
 		$inputs.each(this.storeValue)
 		this.$inputs = this.$inputs.add($inputs)
 	}
-};
+}
 
-}(jQuery));
+}(jQuery))
