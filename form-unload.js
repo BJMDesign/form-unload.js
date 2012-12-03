@@ -28,8 +28,7 @@ $.fn.formUnload = function( option ) {
 var FormUnload = function( form, options ) {
 	this.$form = $(form)
 	this.options = $.extend({}, $.formUnload.defaults, options)
-	this.$inputs = $([])
-	this._addInputs(this.$form.find(this.options.inputsSelector))
+	this.refresh()
 	this.stored()
 	var self = this
 	this.$form.bind('submit', function() {
