@@ -36,11 +36,7 @@ var FormUnload = function( form, options ) {
 		self.stored()
 	})
 	$(window).bind('beforeunload', function() {
-		var changed = self.$inputs.is(function() {
-				if( $(this).data('formUnloadValue') != $(this).val() )
-					return true
-			})
-		if( changed > 0 )
+		if( self.isChanged() )
 			return self.options.message
 	})
 }
@@ -50,6 +46,10 @@ FormUnload.prototype = {
 	},
 	storeValue: function() {
 		$(this).data('formUnloadValue', $(this).val())
+	},
+	refresh: function($els) {
+		this.$inputs = $([])
+		this._addInputs(this.$form.find(this.options.inputsSelector))
 	},
 	addInputs: function($els) {
 		var $inputs = $els.find(this.options.inputsSelector)
@@ -62,6 +62,20 @@ FormUnload.prototype = {
 			$inputs = $inputs.not(this.$form.find(this.options.exclude))
 		$inputs.each(this.storeValue)
 		this.$inputs = this.$inputs.add($inputs)
+	},
+	isChanged: function() {
+		var changed = this.$inputs.is(function() {
+				if( $(this).data('formUnloadValue') != $(this).val() )
+					return true
+			})
+		return changed > 0;
+	},
+	confirmUnload: function() {
+		var rv = !this.isChanged();
+		if( !rv ) {
+			rv = confirm(this.options.message);
+		}
+		return rv;
 	}
 }
 
