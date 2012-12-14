@@ -21,7 +21,11 @@ $.fn.formUnload = function( option ) {
 			data = $this.data('formUnload'),
 			options = typeof option == 'object' && option
 		if (!data) $this.data('formUnload', (data = new FormUnload(this, options)))
-		if (typeof option == 'string') data[option].call(data, args[1])
+		if (typeof option == 'string') {
+			args = Array.prototype.slice.call(args, 0)
+			args.shift()
+			data[option].apply(data, args)
+		}
 	})
 }
 
@@ -40,8 +44,9 @@ var FormUnload = function( form, options ) {
 	})
 }
 FormUnload.prototype = {
-	stored: function() {
-		this.$inputs.each(this.storeValue)
+	stored: function( input ) {
+		if( input ) this.storeValue.call(input)
+		else this.$inputs.each(this.storeValue)
 	},
 	storeValue: function() {
 		$(this).data('formUnloadValue', $(this).val())
